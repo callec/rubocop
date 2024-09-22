@@ -82,6 +82,14 @@ module RuboCop
       end
 
       handle 'textDocument/didClose' do |request|
+        empty = {
+          method: 'textDocument/publishDiagnostics',
+          params: {
+            uri: request.dig(:params, :textDocument, :uri),
+            diagnostics: []
+          }
+        }
+        @server.write(empty)
         @text_cache.delete(request.dig(:params, :textDocument, :uri))
       end
 
